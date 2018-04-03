@@ -38,9 +38,7 @@ const fs = require('fs');
 // countWords('hello world Hello me') --> 'hello: 2\nme:1\nworld: 1\n'
 const countWords = function(paragraph) {
   let words = paragraph.trim('.').split(' ');
-
   let wordBank = {};
-
   for (let i = 0; i < words.length; i++) {
     let word = words[i].toLowerCase();
     if (wordBank.hasOwnProperty(word)) {
@@ -49,22 +47,31 @@ const countWords = function(paragraph) {
       wordBank[word] = 1;
     }
   }
-
   let outputString = '';
-
   let wordsFound = Object.keys(wordBank).sort();
-
   wordsFound.forEach(word => {
     outputString += `${word}: ${wordBank[word]}\n`;
-  })
-  
+  });
   return outputString;
-}
+};
 
 // inputFile: paragraph to read
 // outputFile: path to write resulting txt file to
 // EXAMPLE USAGE
 // countAllWords('./input.txt', './output.txt') --> should output a .txt file in same directory
 var countAllWords = function(inputFile, outputFile) {
-  /* WRITE CODE HERE */ 
-}
+  fs.readFile(inputFile, function(err, data) {
+    if (err) {
+      console.log('ERROR: ', err);
+    }
+    console.log('data is', data.toString())
+    var newData = countWords(data.toString());
+    fs.writeFile(outputFile, newData, function(err) {
+      if (err) {
+        console.log(err);
+      }
+    });
+  });
+};
+
+console.log(countAllWords('./input.txt', './output.txt'));
